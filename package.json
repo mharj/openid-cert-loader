@@ -1,0 +1,23 @@
+{
+  "name": "openid-cert-loader",
+  "version": "1.0.0",
+  "description": "OpenID Certificate loader",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mharj/openid-cert-loader.git"
+  },
+  "keywords": [
+    "openid",
+    "cert"
+  ],
+  "author": "mharj",
+  "license": "LGPL-2.1",
+  "bugs": {
+    "url": "https://github.com/mharj/openid-cert-loader/issues"
+  },
+  "homepage": "https://github.com/mharj/openid-cert-loader#readme"
+}
