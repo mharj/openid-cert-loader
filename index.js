@@ -1,5 +1,12 @@
 const https = require('https');
 
+function insertNewlines(certificate) {
+	for (let i = 64; i < certificate.length; i += 65) {
+		certificate = certificate.slice(0, i) + '\n' + certificate.slice(i);
+	}
+	return certificate;
+}
+
 function getAzureConfig(tenant) {
 	return new Promise(function(resolve, reject) {
 		let options = {
@@ -61,20 +68,23 @@ function getGoogleCerts() {
 function OpenIDCertLoader() {
 	this.getGoogleCerts = getGoogleCerts;
 	this.getAzureCerts = function(tenant) {
-		getAzureConfig(tenant)
-			.then(function(config) {
-				return getAzureCertConfig(config.jwks_uri);
-			})
-			.then(function(certConfig) {
-				let certList = {};
-				if ( certConfig.keys ) {
-					certConfig.keys.forEach(function(key) {
-						let cert = '-----BEGIN CERTIFICATE-----\n'+insertNewlines(key.x5c[0])+'\n-----END CERTIFICATE-----\n';
-						certList[key.kid] = Buffer.from(cert); // store kid + cert mapping
-					});
-				}
-				return certList;
-			});
+			return getAzureConfig(tenant)
+				.then(function(config) {
+					return getAzureCertConfig(config.jwks_uri);
+				})
+				.then(function(certConfig) {
+					let certList = {};
+					if ( certConfig.keys ) {
+						certConfig.keys.forEach(function(key) {
+							let cert = '-----BEGIN CERTIFICATE-----\n'+insertNewlines(key.x5c[0])+'\n-----END CERTIFICATE-----\n';
+							certList[key.kid] = Buffer.from(cert); // store kid + cert mapping
+						});
+					}
+					return certList;
+				})
+				.catch(function(err){
+					Promise.reject(err);
+				})
 	}
 }
 
