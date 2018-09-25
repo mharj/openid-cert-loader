@@ -1,6 +1,8 @@
 # openid-cert-loader
 Basic loader for OpenID provider certificates
 
+[![Build Status](https://travis-ci.org/mharj/openid-cert-loader.svg?branch=master)](https://travis-ci.org/mharj/openid-cert-loader)
+
 ### Example
 ```javascript
 let ocl = new OpenIDCertLoader();
