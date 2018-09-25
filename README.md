@@ -1,5 +1,6 @@
 # openid-cert-loader
 [![Build Status](https://travis-ci.org/mharj/openid-cert-loader.svg?branch=master)](https://travis-ci.org/mharj/openid-cert-loader)
+[![Dependency Status ](https://david-dm.org/mharj/openid-cert-loader.svg)](https://david-dm.org/mharj/openid-cert-loader)
 
 Basic loader for OpenID provider certificates
 
