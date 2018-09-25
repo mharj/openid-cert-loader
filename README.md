@@ -1,6 +1,20 @@
 # openid-cert-loader
 Basic loader for OpenID provider certificates
 
+### Example
+```javascript
+let ocl = new OpenIDCertLoader();
+ocl.addLoader(googleCertLoader);
+ocl.addLoader(()=>azureCertLoader('common'));
+...
+...
+ocl.getCert(someKid)
+	.then( (cert) => {
+		jwt.verify(token, cert, ....
+	})
+
+```
+### Old example (deprecated)
 ```javascript
 const OpenIDCertLoader = require('openid-cert-loader');
 let certs = {};

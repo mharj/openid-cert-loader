@@ -1,10 +1,10 @@
 {
   "name": "openid-cert-loader",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "OpenID Certificate loader",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -19,5 +19,14 @@
   "bugs": {
     "url": "https://github.com/mharj/openid-cert-loader/issues"
   },
-  "homepage": "https://github.com/mharj/openid-cert-loader#readme"
+  "homepage": "https://github.com/mharj/openid-cert-loader#readme",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "eslint": "^5.6.0",
+    "eslint-config-google": "^0.10.0",
+    "mocha": "^5.2.0"
+  },
+  "dependencies": {
+    "cross-fetch": "^2.2.2"
+  }
 }
