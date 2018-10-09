@@ -1,48 +1,14 @@
 const fetch = require('cross-fetch');
 const chai = require('chai');
-const OpenIDCertLoader = require('../index');
-const googleCertLoader = require('../index').GoogleCertLoader;
-const azureCertLoader = require('../index').AzureCertLoader;
-const wrapX5C = require('../util').wrapX5C;
+const OpenIDCertLoader = require('../lib/index.js');
+const googleCertLoader = require('../lib/GoogleCertLoader.js');
+const azureCertLoader = require('../lib/AzureCertLoader.js');
+const wrapX5C = require('../lib/util').wrapX5C;
 chai.should();
 let googleCert = null;
 let googleKid = null;
 let azureCert = null;
 let azureKid = null;
-
-/**
- * Old example loader
- */
-let certs = {};
-function loadCerts() {
-	let ocl = new OpenIDCertLoader();
-	return Promise.all([
-		ocl.getGoogleCerts(), // Google
-		ocl.getAzureCerts('common'), // Azure
-	]).then(function(_certLists) {
-		_certLists.forEach( (_certs) => {
-			Object.keys(_certs).forEach(function(kid) {
-				certs[kid] =_certs[kid];
-			});
-		});
-	});
-}
-
-function getCert(kid) {
-	if ( certs[kid] ) {
-		return Promise.resolve(certs[kid]);
-	} else {
-		return loadCerts()
-			.then( () => {
-				if ( certs[kid] ) {
-					return Promise.resolve(certs[kid]);
-				} else {
-					throw new Error('Certificate problem, no Key ID found');
-				}
-			});
-	}
-}
-
 
 describe('OpenIDCertLoader', function() {
 	describe('GoogleCertLoader', function() {
