@@ -21,9 +21,13 @@ interface CertKey {
 interface CertList {
 	[key: string]: string;
 }
-
+interface TenantCertLoader {
+	name: string,
+	instance: CertLoader,
+}
 let azureConfig: Object | null = null;
 export class AzureCertLoader extends CertLoader {
+	private static instance: TenantCertLoader[] = [];
 	private tenant: string;
 	constructor(tenant: string) {
 		super();
@@ -58,5 +62,18 @@ export class AzureCertLoader extends CertLoader {
 				}
 				return certList;
 			});
+	}
+	public static getInstance({tenant}: {tenant: string}) {
+		this.instance.forEach( (i) => {
+			if ( i.name === tenant ) {
+				return i.instance;
+			}
+		});
+		let ob = {
+			name: tenant,
+			instance: new AzureCertLoader(tenant),
+		}
+		this.instance.push(ob)
+		return ob.instance;
 	}
 }

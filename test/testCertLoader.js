@@ -21,7 +21,7 @@ describe('OpenIDCertLoader', function() {
 		});
 		it('should match with cert', function(done) {
 			const ocl = new OpenIDCertLoader();
-			ocl.addLoader(new GoogleCertLoader());
+			ocl.addLoader(GoogleCertLoader.getInstance());
 			ocl.getCert(googleKid).then((cert) => {
 				cert.should.be.equal(googleCert);
 				done();
@@ -29,7 +29,7 @@ describe('OpenIDCertLoader', function() {
 		});
 		it('should get error when can\' find correct kid', function(done) {
 			const ocl = new OpenIDCertLoader();
-			ocl.addLoader(new GoogleCertLoader);
+			ocl.addLoader(GoogleCertLoader.getInstance());
 			ocl
 				.getCert('something-borked')
 				.catch((err) => {
@@ -52,7 +52,7 @@ describe('OpenIDCertLoader', function() {
 		});
 		it('should match with cert', function(done) {
 			const ocl = new OpenIDCertLoader();
-			ocl.addLoader(new AzureCertLoader('common'));
+			ocl.addLoader(AzureCertLoader.getInstance({tenant: 'common'}));
 			ocl.getCert(azureKid).then((cert) => {
 				cert.should.be.equal(azureCert);
 				done();
@@ -60,7 +60,7 @@ describe('OpenIDCertLoader', function() {
 		});
 		it('should get error when can\' find correct kid', function(done) {
 			const ocl = new OpenIDCertLoader();
-			ocl.addLoader(new AzureCertLoader('common'));
+			ocl.addLoader(AzureCertLoader.getInstance({tenant: 'common'}));
 			ocl
 				.getCert('something-borked')
 				.catch((err) => {
@@ -71,8 +71,8 @@ describe('OpenIDCertLoader', function() {
 	describe('Test Dual Loader', function() {
 		it('should match with certs', function(done) {
 			const ocl = new OpenIDCertLoader();
-			ocl.addLoader(new GoogleCertLoader());
-			ocl.addLoader(new AzureCertLoader('common'));
+			ocl.addLoader(GoogleCertLoader.getInstance());
+			ocl.addLoader(AzureCertLoader.getInstance({tenant: 'common'}));
 			Promise.all([
 				ocl.getCert(googleKid),
 				ocl.getCert(azureKid),
