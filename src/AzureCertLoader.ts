@@ -41,10 +41,10 @@ export class AzureCertLoader extends CertLoader {
 			return Promise.resolve(azureConfig);
 		}
 	}
-	getAzureCertConfig(url: string) {
+	private getAzureCertConfig(url: string) {
 		return fetch(url).then((resp) => resp.json());
 	}
-	get() {
+	public get() {
 		return this.getAzureConfig(this.tenant)
 			.then( (config: Token) => {
 				return this.getAzureCertConfig(config.jwks_uri);
@@ -60,38 +60,3 @@ export class AzureCertLoader extends CertLoader {
 			});
 	}
 }
-
-/*
-function getAzureConfig(tenant) {
-	if (azureConfig === null) {
-		return fetch('https://login.microsoftonline.com/' + tenant + '/.well-known/openid-configuration')
-			.then((resp) => resp.json())
-			.then((json) => {
-				azureConfig = json;
-				return json;
-			});
-	} else {
-		return Promise.resolve(azureConfig);
-	}
-}
-
-function getAzureCertConfig(url, certs) {
-	return fetch(url).then((resp) => resp.json());
-}
-
-module.exports = AzureCertLoader = function(tenant) {
-	return getAzureConfig(tenant)
-		.then(function(config) {
-			return getAzureCertConfig(config.jwks_uri);
-		})
-		.then(function(certConfig) {
-			let certList = {};
-			if (certConfig.keys) {
-				certConfig.keys.forEach(function(key) {
-					certList[key.kid] = wrapX5C(key.x5c[0]); // store kid + cert mapping
-				});
-			}
-			return certList;
-		});
-};
-*/

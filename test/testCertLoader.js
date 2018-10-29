@@ -1,9 +1,6 @@
 const fetch = require('cross-fetch');
 const chai = require('chai');
-const OpenIDCertLoader = require('../lib/index.js');
-const googleCertLoader = require('../lib/GoogleCertLoader.js');
-const azureCertLoader = require('../lib/AzureCertLoader.js');
-const wrapX5C = require('../lib/util').wrapX5C;
+const {OpenIDCertLoader, GoogleCertLoader, AzureCertLoader, wrapX5C} = require('../lib/index.js');
 chai.should();
 let googleCert = null;
 let googleKid = null;
@@ -16,23 +13,23 @@ describe('OpenIDCertLoader', function() {
 			fetch('https://www.googleapis.com/oauth2/v1/certs')
 				.then((resp) => resp.json())
 				.then((data) => {
-					let kids = Object.keys(data);
+					const kids = Object.keys(data);
 					googleKid = kids[0];
 					googleCert = data[googleKid];
 					done();
 				});
 		});
 		it('should match with cert', function(done) {
-			let ocl = new OpenIDCertLoader();
-			ocl.addLoader(googleCertLoader);
+			const ocl = new OpenIDCertLoader();
+			ocl.addLoader(new GoogleCertLoader());
 			ocl.getCert(googleKid).then((cert) => {
 				cert.should.be.equal(googleCert);
 				done();
 			});
 		});
 		it('should get error when can\' find correct kid', function(done) {
-			let ocl = new OpenIDCertLoader();
-			ocl.addLoader(googleCertLoader);
+			const ocl = new OpenIDCertLoader();
+			ocl.addLoader(new GoogleCertLoader);
 			ocl
 				.getCert('something-borked')
 				.catch((err) => {
@@ -54,16 +51,16 @@ describe('OpenIDCertLoader', function() {
 				});
 		});
 		it('should match with cert', function(done) {
-			let ocl = new OpenIDCertLoader();
-			ocl.addLoader(()=>azureCertLoader('common'));
+			const ocl = new OpenIDCertLoader();
+			ocl.addLoader(new AzureCertLoader('common'));
 			ocl.getCert(azureKid).then((cert) => {
 				cert.should.be.equal(azureCert);
 				done();
 			});
 		});
 		it('should get error when can\' find correct kid', function(done) {
-			let ocl = new OpenIDCertLoader();
-			ocl.addLoader(()=>azureCertLoader('common'));
+			const ocl = new OpenIDCertLoader();
+			ocl.addLoader(new AzureCertLoader('common'));
 			ocl
 				.getCert('something-borked')
 				.catch((err) => {
@@ -73,9 +70,9 @@ describe('OpenIDCertLoader', function() {
 	});
 	describe('Test Dual Loader', function() {
 		it('should match with certs', function(done) {
-			let ocl = new OpenIDCertLoader();
-			ocl.addLoader(googleCertLoader);
-			ocl.addLoader(()=>azureCertLoader('common'));
+			const ocl = new OpenIDCertLoader();
+			ocl.addLoader(new GoogleCertLoader());
+			ocl.addLoader(new AzureCertLoader('common'));
 			Promise.all([
 				ocl.getCert(googleKid),
 				ocl.getCert(azureKid),
@@ -85,17 +82,13 @@ describe('OpenIDCertLoader', function() {
 				done();
 			});
 		});
-	});
-	describe('Test old example loader (deprecated)', function() {
-		it('should match with both certs', function(done) {
-			Promise.all([
-				getCert(azureKid),
-				getCert(googleKid),
-			]).then( (certs) => {
-				certs[0].should.be.equal(azureCert);
-				certs[1].should.be.equal(googleCert);
+		it('should not work with wrong loader', function(done) {
+			try {
+				const ocl = new OpenIDCertLoader();
+				ocl.addLoader({});
+			} catch (err) {
 				done();
-			});
+			}
 		});
 	});
 });

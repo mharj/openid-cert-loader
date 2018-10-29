@@ -1,17 +1,23 @@
 import CertLoader from './CertLoader';
 import {ICertKeys} from './CertLoader';
+import {GoogleCertLoader} from './GoogleCertLoader';
+import {AzureCertLoader} from './AzureCertLoader';
+import {wrapX5C} from './util';
 
 /**
  * OpenIDCertLoader
  */
-export default class OpenIDCertLoader {
+class OpenIDCertLoader {
 	private certs: ICertKeys = {};
 	private loaders: Array<CertLoader> = [];
 	/**
 	 * Add Cert loader function (Promise)
 	 * @param {CertLoader} loader class
 	 */
-	addLoader(loader: CertLoader) {
+	public addLoader(loader: CertLoader) {
+		if ( ! (loader instanceof CertLoader ) ) {
+			throw new Error('Not Cert loader instance');
+		}
 		this.loaders.push(loader);
 	};
 	/**
@@ -19,7 +25,7 @@ export default class OpenIDCertLoader {
 	 * @param {string} kid Certificate key ID
 	 * @return {Promise<string>}
 	 */
-	getCert(kid: string): Promise<string> {
+	public getCert(kid: string): Promise<string> {
 		if ( this.certs[kid] ) {
 			return Promise.resolve(this.certs[kid]);
 		} else {
@@ -42,3 +48,4 @@ export default class OpenIDCertLoader {
 		}
 	};
 }
+export {OpenIDCertLoader, GoogleCertLoader, AzureCertLoader, wrapX5C};

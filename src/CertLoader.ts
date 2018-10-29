@@ -5,5 +5,5 @@ export interface ICertKeys {
 
 
 export default abstract class CertLoader {
-	abstract get(): Promise<ICertKeys>;
+	public abstract get(): Promise<ICertKeys>;
 }
